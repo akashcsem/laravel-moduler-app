@@ -1,72 +1,77 @@
 <p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
 
-## About Laravel
+## Laravel Module Based Application System
+You can develop your laravel application based on your module. In this system you can create seperate directory for every module, where every resurses files and folder(like model, view, controller, migrations, and any other classes) will be included in your custom generated folder or directory. Let's see the process step by step.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### In here I will create two module
+- Account.
+- Hrm.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Listen, my laravel application name is Laravel Moduler App, and the root directory is laravel-moduler-app, So create a directory "module" on the application root directory, like
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<img src="root-directory.png" width="200" height="160x" style="align:left">
 
-## Learning Laravel
+### Now create two module Account and Hrm, Follow the screenshot
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+<img src="modules.png" wiidth="200" height="160x" style="align:left">
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Create your necessary file and folders, like this
 
-## Laravel Sponsors
+<img src="resources.png" wiidth="200" height="160x" style="align:left">
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
+### Now open composer.json and make the changes,
+add ```"Module\\": "module/",``` on autoload, like this
 
-## Contributing
+<img src="composer_json.png" wiidth="300" height="160x" style="align:left">
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Open config/view.php and add this two line on paths array, followed by screenshot
+```php 
+        base_path('module/Account/views'),
+        base_path('module/Hrm/views'),
+```
+This code will help you to load your views from your module directory
 
-## Security Vulnerabilities
+<img src="view_php.png" wiidth="300" height="160x" style="align:left">
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+### Now run a comman ``` php artisan make:provider MigrationServiceProvider```
+This command will create a new MigrationServiceProvider. After this command go to ```app/Providers/MigrationServiceProvider.php```
+and add this 4 line of code into boot method 
+```php 
+$this->loadMigrationsFrom([
+    base_path().DIRECTORY_SEPARATOR.'module'.DIRECTORY_SEPARATOR.'Account'.DIRECTORY_SEPARATOR.'migrations',
+    base_path().DIRECTORY_SEPARATOR.'module'.DIRECTORY_SEPARATOR.'Hrm'.DIRECTORY_SEPARATOR.'migrations',
+]);
+```
 
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+<img src="migration_service_provider.png" wiidth="300" height="160x" style="align:left">
+
+### Now open config/app.php
+add ```App\Providers\MigrationServiceProvider::class,``` this line in `providers` array
+
+
+<img src="config_app.png" wiidth="300" height="160x" style="align:left">
+
+### Open ```app/Providers/RouteServiceProvider.php``` and make the changes,
+
+add two line of code on the top of class
+```php 
+protected $account      = 'Module\Account\Controllers';
+protected $hrm          = 'Module\Hrm\Controllers';
+```
+
+<img src="route_namespace.png" wiidth="300" height="160x" style="align:left">
+
+### After setup namespace you should setup route file paths, on `mapWebRoutes` method
+```php 
+Route::group(['middleware' => 'web'], function () {
+    Route::namespace($this->account)->group(base_path('module/Account/web.php'));
+    Route::namespace($this->hrm)->group(base_path('module/Hrm/web.php'));
+});
+```
+
+<img src="map_web_routes.png" wiidth="300" height="160x" style="align:left">
+
+Now your configuration is ok, if you fetch any trouble to create model, view, controller and migration, please follow this project files. Althow if you can't able to solve your problem please contact with me I will try to help you.
