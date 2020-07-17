@@ -12,9 +12,10 @@ return [
     | the usual Laravel view path has already been registered for you.
     |
     */
-
     'paths' => [
         resource_path('views'),
+        base_path('module/Account/views'),
+        base_path('module/Hrm/views'),
     ],
 
     /*

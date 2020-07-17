@@ -33,6 +33,7 @@
     },
     "autoload": {
         "psr-4": {
+            "Module\\": "module/",
             "App\\": "app/"
         },
         "classmap": [

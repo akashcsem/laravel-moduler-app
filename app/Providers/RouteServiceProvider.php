@@ -14,7 +14,9 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    protected $namespace = 'App\Http\Controllers';
+    protected $namespace    = 'App\Http\Controllers';
+    protected $account      = 'Module\Account\Controllers';
+    protected $hrm          = 'Module\Hrm\Controllers';
 
     /**
      * Define your route model bindings, pattern filters, etc.
@@ -54,6 +56,11 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/web.php'));
+
+        Route::group(['middleware' => 'web'], function () {
+            Route::namespace($this->account)->group(base_path('module/Account/web.php'));
+            Route::namespace($this->hrm)->group(base_path('module/Hrm/web.php'));
+        });
     }
 
     /**
