@@ -53,3 +53,25 @@ add ```App\Providers\MigrationServiceProvider::class,``` this line in `providers
 
 
 <img src="config_app.png" wiidth="300" height="160x" style="align:left">
+
+### Open ```app/Providers/RouteServiceProvider.php``` and make the changes,
+
+add two line of code on the top of class
+```php 
+protected $account      = 'Module\Account\Controllers';
+protected $hrm          = 'Module\Hrm\Controllers';
+```
+
+<img src="route_namespace.png" wiidth="300" height="160x" style="align:left">
+
+### After setup namespace you should setup route file paths, on `mapWebRoutes` method
+```php 
+Route::group(['middleware' => 'web'], function () {
+    Route::namespace($this->account)->group(base_path('module/Account/web.php'));
+    Route::namespace($this->hrm)->group(base_path('module/Hrm/web.php'));
+});
+```
+
+<img src="map_web_routes.png" wiidth="300" height="160x" style="align:left">
+
+Now your configuration is ok, if you fetch any trouble to create model, view, controller and migration, please follow this project files. Althow if you can't able to solve your problem please contact with me I will try to help you.
